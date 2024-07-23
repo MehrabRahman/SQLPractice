@@ -1,0 +1,22 @@
+<project>
+
+  <groupId>com.revature.Mehrab</groupId>
+  <artifactId>SQLPractice</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <modelVersion>4.0.0</modelVersion>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.3.230</version>
+    </dependency>
+  </dependencies>
+
+</project>
