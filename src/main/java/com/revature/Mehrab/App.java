@@ -1,50 +1,45 @@
 package com.revature.Mehrab;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
+import com.revature.Barbee.utils.ResultSetPrinter;
+
 public class App {
-    public static void main(String[] args) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:h2:mem:test;INIT=runscript from 'init.sql'", "sa", "");
-        // ResultSet resultSet = connection.prepareStatement("select * from cars").executeQuery();
-        // while (resultSet.next()) 
-        //     System.out.println(resultSet.getInt("id") + " " + resultSet.getString("name") + " " + resultSet.getInt("yearmake"));
+    public static void main(String[] args) {
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:mem:test;INIT=runscript from 'init.sql'", "sa", "")) {
+        try (Scanner scanner = new Scanner(System.in)) {
+            String query;
+            while (true) {
+                Statement statement = connection.createStatement();
+                System.out.print("h2> ");
+                query = scanner.nextLine();
+            
+                if ("exit".equalsIgnoreCase(query)) {
+                    break;
+                }
 
-        Scanner scanner = new Scanner(System.in);
-        boolean isDone = false;
-        String query;
-        while (!isDone) {
-            Statement statement = connection.createStatement();
-            System.out.print("h2> ");
-            query = scanner.nextLine();
-        
-            if ("exit".equalsIgnoreCase(query)) {
-                isDone = true;
-                break;
-            }
+                while (!query.endsWith(";")) {
+                    System.out.print("---->  ");
+                    query += scanner.nextLine();
+                }
 
-            while (!query.endsWith(";")) {
-                System.out.print("---->  ");
-                query += scanner.nextLine();
-            }
-
-            try {
                 boolean isResultSet = statement.execute(query);
                 if (isResultSet) {
                     ResultSet resultSet = statement.getResultSet();
-                    for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
-                        System.out.printf("%-15s", resultSet.getString(i));
-                    }
-                    System.out.println();
+                    ResultSetPrinter.printResultSet(resultSet);
                 } else {
                     int linesUpdated = statement.getUpdateCount();
                     System.out.println(linesUpdated + ((linesUpdated == 1) ? " row" : " rows") + " updated.");
                 }
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
             }
         }
-        scanner.close();
-        connection.close();
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 }
