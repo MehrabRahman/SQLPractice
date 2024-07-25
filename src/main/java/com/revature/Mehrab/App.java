@@ -11,8 +11,11 @@ import com.revature.Barbee.utils.ResultSetPrinter;
 
 public class App {
     public static void main(String[] args) {
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:mem:test;INIT=runscript from 'init.sql'", "sa", "")) {
-        try (Scanner scanner = new Scanner(System.in)) {
+        try (
+            //Connection connection = DriverManager.getConnection("jdbc:h2:mem:test;INIT=runscript from 'init.sql'", "sa", "");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "password");
+            Scanner scanner = new Scanner(System.in)
+        ) {
             String query;
             while (true) {
                 Statement statement = connection.createStatement();
@@ -37,7 +40,6 @@ public class App {
                     System.out.println(linesUpdated + ((linesUpdated == 1) ? " row" : " rows") + " updated.");
                 }
             }
-        }
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
